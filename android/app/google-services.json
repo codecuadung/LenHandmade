@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "889240268150",
+    "project_id": "hoalenpro",
+    "storage_bucket": "hoalenpro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889240268150:android:09375e0fddbbbe1ba89e57",
+        "android_client_info": {
+          "package_name": "com.hoalenhandmade"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcAaYLk-r8RoLgwbeR5phCQtzQydA1qTo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
