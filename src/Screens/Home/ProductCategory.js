@@ -27,32 +27,44 @@ const ProductCategory = ({data}) => {
   const formatPrice = (price)=> price.toLocaleString('de-DE')
 
   const renderItem = ({item}) => {
+    const roundUpToThousands = (value) => Math.ceil(value / 1000) * 1000;
+
     let priceAfterSaleMin, priceAfterSaleMax;
-    let updateData = item
-  // giá sau giảm khi mà có chỉ 1 biến thể
+    let updateData = item;
+    
+    // Giá sau giảm khi chỉ có 1 biến thể
     if (item.sub_variants.length === 1) {
       priceAfterSaleMin = item.sale
-        ? item.sub_variants[0].price - item.sub_variants[0].price * item.sale /100
-        : item.sub_variants[0].price;
-
-        // thêm giá sau giảm vào item để truyền vào màn hình chi tiết sản phẩm
-         updateData = {...item,priceAfterSaleMin,}
+        ? roundUpToThousands(
+            item.sub_variants[0].price - (item.sub_variants[0].price * item.sale) / 100
+          )
+        : roundUpToThousands(item.sub_variants[0].price);
+    
+      // Thêm giá sau giảm vào item để truyền vào màn hình chi tiết sản phẩm
+      updateData = { ...item, priceAfterSaleMin };
     } else if (item.sub_variants.length > 1) {
       // Tính min và max price cho trường hợp có nhiều biến thể
       const { minPrice, maxPrice } = minMaxPrice(item.sub_variants);
-      
+    
       priceAfterSaleMin = item.sale
-        ? minPrice - minPrice * item.sale /100
-        : minPrice;
-      
+        ? roundUpToThousands(minPrice - (minPrice * item.sale) / 100)
+        : roundUpToThousands(minPrice);
+    
       priceAfterSaleMax = item.sale
-        ? maxPrice - maxPrice * item.sale /100
-        : maxPrice;
-
-         // thêm giá sau giảm vào item để truyền vào màn hình chi tiết sản phẩm
-         updateData = {...item,priceAfterSaleMax,priceAfterSaleMin,minPrice,maxPrice}
+        ? roundUpToThousands(maxPrice - (maxPrice * item.sale) / 100)
+        : roundUpToThousands(maxPrice);
+    
+      // Thêm giá sau giảm vào item để truyền vào màn hình chi tiết sản phẩm
+      updateData = {
+        ...item,
+        priceAfterSaleMax,
+        priceAfterSaleMin,
+        minPrice,
+        maxPrice,
+      };
     }
-  
+    
+    
     
     return (
       <TouchableOpacity onPress={() => navigation.navigate('Detail',{item:updateData})}>

@@ -11,22 +11,27 @@ const InfoProduct = ({ data }) => {
 
   const dots = (price) => price.toLocaleString('de-DE');
 
+
+  
   // Hàm tính toán khoản tiết kiệm
   const calculateSavings = () => {
     let saveMin, saveMax;
+    
+    if(subVariant.length ===0){
     if (variant.sub_variants.length > 1) {
-      saveMin = variant.minPrice - variant.priceAfterSaleMin;
-      saveMax = variant.maxPrice - variant.priceAfterSaleMax;
-    } else {
-      saveMin = variant.sub_variants[0].price - variant.priceAfterSaleMin;
+      saveMin = Math.ceil(variant.minPrice - variant.priceAfterSaleMin);
+      saveMax = Math.ceil(variant.maxPrice - variant.priceAfterSaleMax);
+    } else if(variant.sub_variants.length === 1){
+      saveMin = Math.ceil(variant.sub_variants[0].price - variant.priceAfterSaleMin);
       saveMax = saveMin; // Nếu chỉ có một giá trị, gán `saveMax` bằng `saveMin`.
     }
+  }
+  
     return { saveMin, saveMax };
   };
-
+  
   const { saveMin, saveMax } = calculateSavings();
-
-
+  
   // Lấy toàn bộ color hoặc style
   const getColorAndStyle = () => {
     if (variant.sub_variants[0].color === null) {
@@ -80,7 +85,25 @@ const InfoProduct = ({ data }) => {
     }
   }
 
-  
+  //Giá sale dùng cho variant
+  const priceSale=(item)=>{
+    
+     const result = item - item * subVariant.sale /100
+     return Math.ceil(result / 1000) * 1000; //làm tròn đến hàng nghìn
+  }
+  // tiết kiệm dùng cho variant
+  const handleSaveVariant = ()=>{
+    if(subVariant.length===0){
+      return 0
+    }
+    //giá gốc trong variant - giá sale
+    return subVariant[0].price - priceSale(subVariant[0].price)
+  }
+  const saveVariant = handleSaveVariant()
+
+
+
+
   return (
     <View style={styles.container}>
       {/* Ảnh, tên và số sao */}
@@ -107,40 +130,57 @@ const InfoProduct = ({ data }) => {
     </Text>
   )
 ) : (
-  <Text style={styles.priceText}>Giá: {dots(subVariant[0].price)} VNĐ</Text>
+  <Text style={styles.priceText}>Giá: {dots( priceSale(subVariant[0].price))} VNĐ</Text>
 )}
 
       {/* Giá chính hãng và phần trăm giảm */}
-      {/* <View style={styles.discountContainer}>
+      <View style={styles.discountContainer}>
         <Text>Giá chính hãng: </Text>
-        {variant.sub_variants.length > 1 ? (
+        {subVariant.length===0?(
+          variant.sub_variants.length > 1 ? (
+            <Text style={styles.strikethroughText}>
+              {dots(variant.minPrice)} - {dots(variant.maxPrice)} VNĐ
+            </Text>
+          ) : (
+            <Text style={styles.strikethroughText}>
+              {dots(variant.sub_variants[0].price)} VNĐ
+            </Text>
+          )
+        ):(
           <Text style={styles.strikethroughText}>
-            {dots(variant.minPrice)} - {dots(variant.maxPrice)} VNĐ
-          </Text>
-        ) : (
-          <Text style={styles.strikethroughText}>
-            {dots(variant.sub_variants[0].price)} VNĐ
-          </Text>
+              {dots(subVariant[0].price)} VNĐ
+            </Text>
         )}
+        
+
         <Text style={styles.discountBadge}>
           - {variant.sale}%
         </Text>
-      </View> */}
+      </View>
 
       {/* Hiển thị khoản tiết kiệm */}
-      {/* <View style={styles.savingsContainer}>
-        {variant.sub_variants.length > 1 ? (
+      <View style={styles.savingsContainer}>
+        {subVariant.length===0?
+        variant.sub_variants.length > 1 ? (
           <View style={styles.savingsRow}>
             <Text style={styles.savingsLabel}>Tiết kiệm:</Text>
-            <Text style={styles.savingsText}> {dots(saveMin)} - {dots(saveMax)} VNĐ</Text>
+            {saveMin!==saveMax?
+             <Text style={styles.savingsText}> {dots(saveMin)} - {dots(saveMax)} VNĐ</Text>:
+             <Text style={styles.savingsText}> {dots(saveMin)} VNĐ</Text>}
+           
           </View>
         ) : (
           <View style={styles.savingsRow}>
             <Text style={styles.savingsLabel}>Tiết kiệm:</Text>
             <Text style={styles.savingsText}> {dots(saveMin)} VNĐ</Text>
           </View>
+        ):(
+          <View style={styles.savingsRow}>
+          <Text style={styles.savingsLabel}>Tiết kiệm:</Text>
+          <Text style={styles.savingsText}> {dots(saveVariant)} VNĐ</Text>
+        </View>
         )}
-      </View> */}
+      </View>
 
       {/* Color hoặc style */}
       {colorOrStyle.allColor !== null ? (
