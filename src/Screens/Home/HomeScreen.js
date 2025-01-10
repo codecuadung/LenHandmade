@@ -10,7 +10,7 @@ import { darkTheme,lightTheme } from '../../utils/Theme'
 import { ScrollView } from 'react-native-gesture-handler'
 
 import { useDispatch,useSelector } from 'react-redux'
-import { fetchProducts } from '../../redux/slices/productSlice'
+import { fetchProducts } from '../../redux/thunks/fetchProducts'
 
 const HomeScreen = () => {
   const cartItemCount = 3

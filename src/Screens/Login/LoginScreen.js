@@ -5,50 +5,96 @@ import {
   KeyboardAvoidingView,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
-import React from 'react';
+import React, { useState,useEffect } from 'react';
+import CheckBox from '@react-native-community/checkbox';
 import { TextInput } from 'react-native-gesture-handler';
 import { useTheme } from '../../utils/ThemeContext';
 import { darkTheme, lightTheme } from '../../utils/Theme';
-
-const LoginScreen = ({navigation}) => {
+import { useDispatch, useSelector } from 'react-redux';
+import { loginThunk } from '../../redux/thunks/authThunk';
+const LoginScreen = ({ navigation, route }) => {
   const { isDarkMode } = useTheme();
   const textColor = isDarkMode ? darkTheme.colors.text : lightTheme.colors.text;
-  const background = isDarkMode? darkTheme.colors.background : lightTheme.colors.background
-  const divider = isDarkMode? lightTheme.colors.background : darkTheme.colors.background
+  const background = isDarkMode
+    ? darkTheme.colors.background
+    : lightTheme.colors.background;
+  const divider = isDarkMode
+    ? lightTheme.colors.background
+    : darkTheme.colors.background;
 
+  const passwordExisted = route.params?.password || ''
+  const emailExisted = route.params?.email|| ''
+  console.log(route.params)
+  const [checked, setChecked] = useState(false);
+  const [email, setEmail] = useState(emailExisted);
+  const [password, setPassword] = useState(passwordExisted);
+
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
+
+  const handleLogin = async () => {
+    if (email.trim() === '' || password.trim() === '') {
+      Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ thông tin!');
+      return;
+    }
+  
+    try {
+      await dispatch(loginThunk({ email, password })).unwrap();
+      navigation.navigate('BottomTab');
+    } catch (error) {
+      Alert.alert('Đăng nhập thất bại', error); // Hiển thị thông báo lỗi từ rejectWithValue
+    }
+  };
+  
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#FF714B" />
+      </View>
+    );
+  }
   return (
-    <KeyboardAvoidingView
-      behavior="height"
-      keyboardVerticalOffset={0}
-      style={{ flex: 1}}
-    >
-      <View style={[styles.container,{backgroundColor:background}]}>
-        <Image
-          style={styles.logo}
-          source={require('../../assets/iconBanner.png')}
-        />
-        <Text style={[styles.title,{color:textColor}]}>Đăng nhập</Text>
+    <KeyboardAvoidingView style={{ flex: 1 }}>
+      <View style={[styles.container, { backgroundColor: background }]}>
+        <Image style={styles.logo} source={require('../../assets/iconBanner.png')} />
+        <Text style={[styles.title, { color: textColor }]}>Đăng nhập</Text>
 
         <TextInput
-          style={[styles.input]}
+          style={styles.input}
           placeholder="Nhập email của bạn"
-
+          placeholderTextColor={divider}
+          onChangeText={setEmail}
+          value={email}
         />
         <TextInput
-          style={[styles.input]}
+          style={styles.input}
           placeholder="Nhập mật khẩu của bạn"
+          placeholderTextColor={divider}
           secureTextEntry
+          onChangeText={setPassword}
+          value={password}
         />
 
-        <TouchableOpacity style={[styles.button]} onPress={()=>{navigation.navigate('BottomTab')}}>
-          <Text style={[styles.buttonText]}>Đăng nhập</Text>
+        <View style={styles.checkboxContainer}>
+          <CheckBox
+            value={checked}
+            onValueChange={setChecked}
+            tintColors={{ true: '#FF714B', false: divider }}
+          />
+          <Text style={[styles.checkboxLabel, { color: textColor }]}>Nhớ</Text>
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Đăng nhập</Text>
         </TouchableOpacity>
 
         <View style={styles.dividerContainer}>
-          <View style={[styles.divider,{backgroundColor:divider}]} />
-          <Text style={textColor}>or</Text>
-          <View style={[styles.divider,{backgroundColor:divider}]} />
+          <View style={[styles.divider, { backgroundColor: divider }]} />
+          <Text style={{ color: textColor }}>or</Text>
+          <View style={[styles.divider, { backgroundColor: divider }]} />
         </View>
 
         <TouchableOpacity style={styles.iconButton}>
@@ -56,11 +102,11 @@ const LoginScreen = ({navigation}) => {
         </TouchableOpacity>
 
         <View style={styles.footer}>
-          <Text style={[styles.footerText, {color:textColor}]}>
+          <Text style={[styles.footerText, { color: textColor }]}>
             Bạn chưa có tài khoản?
           </Text>
-          <TouchableOpacity onPress={()=>{navigation.navigate('Register')}}>
-            <Text style={[styles.link]}>Đăng ký</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Text style={styles.link}>Đăng ký</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -76,6 +122,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   logo: {
     width: 200,

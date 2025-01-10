@@ -28,7 +28,7 @@ const AppContent = () => {
 
   return (
     <NavigationContainer theme={theme}>
-      <Stack.Navigator initialRouteName='BottomTab'>
+      <Stack.Navigator initialRouteName='Login'>
         <Stack.Screen name='Splash' component={SplashScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Home' component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Login' component={LoginScreen} options={{ headerShown: false }} />
