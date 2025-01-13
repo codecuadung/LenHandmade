@@ -9,6 +9,9 @@ import LoginScreen from '../Screens/Login/LoginScreen';
 import RegisterScreen from '../Screens/Register/RegisterScreen';
 import BottomTab from './BottomTab';
 import ProductDetail from '../Screens/Detail/ProductDetail';
+import DesignScreen from '../Screens/bouquetDesign/DesignScreen';
+import NotificationScreen from '../Screens/notification/NotificationScreen';
+import ChatScreen from '../Screens/chat/ChatScreen';
 
 import { darkTheme, lightTheme } from '../utils/Theme';
 import { useTheme } from '../utils/ThemeContext';
@@ -35,6 +38,9 @@ const AppContent = () => {
         <Stack.Screen name='Register' component={RegisterScreen} options={{ headerShown: false }} />
         <Stack.Screen name='BottomTab' component={BottomTab} options={{ headerShown: false }} />
         <Stack.Screen name='Detail' component={ProductDetail} options={{ headerShown: false }} />
+        <Stack.Screen name='Design' component={DesignScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='Notification' component={NotificationScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='Chat' component={ChatScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

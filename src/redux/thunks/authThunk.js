@@ -61,7 +61,6 @@ export const loginThunk = createAsyncThunk(
         emailVerified: user.emailVerified,
       };
     } catch (error) {
-      console.error('Error during login:', error.code, error.message); // Log lỗi chi tiết
       return rejectWithValue(error?.message || 'Đăng nhập thất bại!');
     }
   }

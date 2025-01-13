@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const HeaderHome= ({ cartItemCount }) => {
+const HeaderHome= () => {
+  const cartItemCount = 3
   return (
     <View style={styles.headerStyle}>
       <View style={{}}>

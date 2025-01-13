@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View,ActivityIndicator } from 'react-native'
 import React,{useEffect} from 'react'
-import HeaderHome from './HeaderHome'
+import HeaderHome from '../../components/HeaderHome'
 import Slider from './Slider'
 import Category from './Category'
 import ProductCategory from './ProductCategory'
@@ -13,7 +13,6 @@ import { useDispatch,useSelector } from 'react-redux'
 import { fetchProducts } from '../../redux/thunks/fetchProducts'
 
 const HomeScreen = () => {
-  const cartItemCount = 3
 
   const {isDarkMode} = useTheme()
   
@@ -51,7 +50,7 @@ const ProductSale = items.filter((product)=>product.productGroup.saleProduct ===
   return (
    <ScrollView style={[styles.container,{backgroundColor:background}]}>
     <View >
-      <HeaderHome cartItemCount={cartItemCount}/>
+      <HeaderHome/>
 
       <Slider/>
 
@@ -62,7 +61,7 @@ const ProductSale = items.filter((product)=>product.productGroup.saleProduct ===
       <ProductCategory data={{ products: ProductPopular, title: 'Sản phẩm phổ biến' }}/>
 
       <ProductCategory data={{ products: ProductSale, title: 'Sản phẩm sale' }}/>
-
+      <View style={{height:80}}></View>
     </View>
     </ScrollView>
     
@@ -74,6 +73,5 @@ export default HomeScreen
 const styles = StyleSheet.create({
   container:{
     flex:1,
-    
   }
 })

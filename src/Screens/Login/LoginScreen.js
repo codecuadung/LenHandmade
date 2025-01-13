@@ -15,6 +15,7 @@ import { useTheme } from '../../utils/ThemeContext';
 import { darkTheme, lightTheme } from '../../utils/Theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginThunk } from '../../redux/thunks/authThunk';
+import { resendVerificationEmail } from '../../redux/thunks/authThunk';
 const LoginScreen = ({ navigation, route }) => {
   const { isDarkMode } = useTheme();
   const textColor = isDarkMode ? darkTheme.colors.text : lightTheme.colors.text;
@@ -27,13 +28,12 @@ const LoginScreen = ({ navigation, route }) => {
 
   const passwordExisted = route.params?.password || ''
   const emailExisted = route.params?.email|| ''
-  console.log(route.params)
   const [checked, setChecked] = useState(false);
   const [email, setEmail] = useState(emailExisted);
   const [password, setPassword] = useState(passwordExisted);
 
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.auth);
+  const { loading,error } = useSelector((state) => state.auth);
 
   const handleLogin = async () => {
     if (email.trim() === '' || password.trim() === '') {
@@ -48,6 +48,10 @@ const LoginScreen = ({ navigation, route }) => {
       Alert.alert('Đăng nhập thất bại', error); // Hiển thị thông báo lỗi từ rejectWithValue
     }
   };
+
+  const handleReSendEmail = async()=>{
+    await dispatch(resendVerificationEmail())
+  }
   
   if (loading) {
     return (
@@ -86,6 +90,13 @@ const LoginScreen = ({ navigation, route }) => {
           />
           <Text style={[styles.checkboxLabel, { color: textColor }]}>Nhớ</Text>
         </View>
+
+        {error&&
+        <TouchableOpacity onPress={handleReSendEmail}>
+          <Text>
+            Gửi lại mail xác nhận
+          </Text>
+        </TouchableOpacity>}
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Đăng nhập</Text>

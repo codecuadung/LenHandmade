@@ -104,6 +104,8 @@ const InfoProduct = ({ data }) => {
 
 
 
+
+
   return (
     <View style={styles.container}>
       {/* Ảnh, tên và số sao */}
@@ -111,6 +113,8 @@ const InfoProduct = ({ data }) => {
         {subVariant.length === 0? (<Image style={styles.productImage} source={{ uri: variant.image }} />): ( <Image style={styles.productImage} source={{ uri: subVariant[0].image }} />)}
 
         <Text style={styles.productName}>{variant.name}</Text>
+
+        {/* hiển thị số sao đánh giá */}
         {/* <AverageStar data={variant} /> */}
       </View>
       <View style={styles.separator} />
