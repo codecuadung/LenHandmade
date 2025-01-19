@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, View, Button, Image } from 'react-native'; // Import các thành phần UI cần thiết
+import { Alert, StyleSheet, Text, View, Button, Image, TouchableOpacity } from 'react-native'; // Import các thành phần UI cần thiết
 import React, { useState } from 'react'; // Import React và useState để quản lý trạng thái
 import { launchImageLibrary } from 'react-native-image-picker'; // Import hàm chọn ảnh từ thư viện
 import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } from '@env';
@@ -72,16 +72,19 @@ const ImagePickerComponent = () => {
   
   return (
     <View style={styles.container}>
-      {/* Nút chọn ảnh */}
-      <Button title="Chọn ảnh từ thư viện" onPress={pickImage} />
 
       {/* Hiển thị ảnh đã chọn */}
-      {selectedImage && (
+      <Text>Chọn ảnh từ thư viện</Text>
+      <TouchableOpacity onPress={pickImage}>
+      {selectedImage? (
         <Image
           source={{ uri: selectedImage }} // Hiển thị ảnh từ URI
           style={styles.image}
         />
+      ):(
+        <Image style={styles.image} source={require('../../assets/camera.png')}/>
       )}
+      </TouchableOpacity>
 
       {/* Hiển thị URL ảnh đã tải lên */}
       {uploadedImageUrl && (

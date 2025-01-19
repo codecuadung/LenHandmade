@@ -9,13 +9,14 @@ import {
   Alert,
 } from 'react-native';
 import React, { useState,useEffect } from 'react';
-import CheckBox from '@react-native-community/checkbox';
+import Checkbox from 'react-native-checkbox';
 import { TextInput } from 'react-native-gesture-handler';
 import { useTheme } from '../../utils/ThemeContext';
 import { darkTheme, lightTheme } from '../../utils/Theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginThunk } from '../../redux/thunks/authThunk';
 import { resendVerificationEmail } from '../../redux/thunks/authThunk';
+import EncryptedStorage from 'react-native-encrypted-storage';
 const LoginScreen = ({ navigation, route }) => {
   const { isDarkMode } = useTheme();
   const textColor = isDarkMode ? darkTheme.colors.text : lightTheme.colors.text;
@@ -28,12 +29,14 @@ const LoginScreen = ({ navigation, route }) => {
 
   const passwordExisted = route.params?.password || ''
   const emailExisted = route.params?.email|| ''
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
   const [email, setEmail] = useState(emailExisted);
   const [password, setPassword] = useState(passwordExisted);
 
   const dispatch = useDispatch();
   const { loading,error } = useSelector((state) => state.auth);
+
+
 
   const handleLogin = async () => {
     if (email.trim() === '' || password.trim() === '') {
@@ -43,16 +46,62 @@ const LoginScreen = ({ navigation, route }) => {
   
     try {
       await dispatch(loginThunk({ email, password })).unwrap();
+  
+      // Nếu checkbox được chọn, lưu thông tin đăng nhập
+      if (checked) {
+        await EncryptedStorage.setItem(
+          'userCredentials',
+          JSON.stringify({ email, password })
+        );
+        console.log('Thông tin đăng nhập đã được lưu.');
+      } else {
+        // Nếu checkbox không được chọn, xóa thông tin đã lưu trước đó
+        await EncryptedStorage.removeItem('userCredentials');
+        console.log('Đã xóa thông tin đăng nhập.');
+      }
+  
       navigation.navigate('BottomTab');
     } catch (error) {
       Alert.alert('Đăng nhập thất bại', error); // Hiển thị thông báo lỗi từ rejectWithValue
     }
   };
-
+  
   const handleReSendEmail = async()=>{
     await dispatch(resendVerificationEmail())
   }
   
+//hàm lấy email và password đã lưu 
+const getSavedCredentials = async () => {
+  try {
+    const credentials = await EncryptedStorage.getItem('userCredentials');
+    if (credentials) {
+      return JSON.parse(credentials);
+    }
+    return null; // Không có thông tin lưu trữ
+  } catch (error) {
+    console.error('Lỗi khi lấy thông tin tài khoản:', error);
+    return null;
+  }
+};
+
+//set tk và mk 
+useEffect(() => {
+  const fetchSavedCredentials = async () => {
+    const savedCredentials = await getSavedCredentials();
+    if (savedCredentials) {
+      setEmail(savedCredentials.email);
+      setPassword(savedCredentials.password);
+      setChecked(true); // Đặt trạng thái checkbox thành đã chọn
+    }
+  };
+
+  fetchSavedCredentials();
+}, []);
+
+const handleCheckBoxChange = () => {
+  setChecked(!checked); // Đảo trạng thái checkbox khi nhấn
+};
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -60,6 +109,7 @@ const LoginScreen = ({ navigation, route }) => {
       </View>
     );
   }
+
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
       <View style={[styles.container, { backgroundColor: background }]}>
@@ -83,11 +133,13 @@ const LoginScreen = ({ navigation, route }) => {
         />
 
         <View style={styles.checkboxContainer}>
-          <CheckBox
+          {/* thêm checkbox */}
+          {/* <Checkbox
             value={checked}
-            onValueChange={setChecked}
-            tintColors={{ true: '#FF714B', false: divider }}
-          />
+            onValueChange={handleCheckBoxChange}
+          /> */}
+
+
           <Text style={[styles.checkboxLabel, { color: textColor }]}>Nhớ</Text>
         </View>
 
