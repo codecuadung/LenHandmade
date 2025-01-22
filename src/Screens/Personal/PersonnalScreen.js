@@ -7,14 +7,14 @@ import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } from
 const PersonnalScreen = () => {
   const lenght = 5
 
-  const data = new FormData()
-  data.append('file',{
-    uri: fileUri,
-    type:'image/jepg',
-    name:'upload_image.jpg'
-    })
-    data.append('upload_preset','demo_hoalen')
-    data.append('cloud_name','dtzbo0fwp')
+  // const data = new FormData()
+  // data.append('file',{
+  //   uri: fileUri,
+  //   type:'image/jepg',
+  //   name:'upload_image.jpg'
+  //   })
+  //   data.append('upload_preset','demo_hoalen')
+  //   data.append('cloud_name','dtzbo0fwp')
     
   return (
     <View style={{backgroundColor:'#F5F5F5',flex:1,alignItems:'center'}}>
