@@ -15,6 +15,8 @@ import ChatScreen from '../Screens/chat/ChatScreen';
 
 import { darkTheme, lightTheme } from '../utils/Theme';
 import { useTheme } from '../utils/ThemeContext';
+import Category from '../Screens/Home/Category';
+import CategoryScreen from '../Screens/Category/CategoryScreen';
 
 const AppContent = () => {
   const Stack = createStackNavigator();
@@ -41,6 +43,8 @@ const AppContent = () => {
         <Stack.Screen name='Design' component={DesignScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Notification' component={NotificationScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Chat' component={ChatScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='Category' component={Category} options={{ headerShown: false }} />
+        <Stack.Screen name='CategoryScreen' component={CategoryScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

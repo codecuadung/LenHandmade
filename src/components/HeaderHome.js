@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.7)', // Nền trắng với độ trong suốt
     borderRadius: 15,
     height: 40,
-    width: 220,
+    width: '70%',
     paddingLeft: 10,
     marginRight: 10,
     borderColor:'#FF714B',

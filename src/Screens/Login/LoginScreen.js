@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
+    color: 'black',
     marginBottom: 15,
     borderColor:'#FF714B'
   },

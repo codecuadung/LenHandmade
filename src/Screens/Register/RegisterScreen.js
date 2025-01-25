@@ -91,22 +91,26 @@ const RegisterScreen = () => {
         <TextInput
           style={[styles.input]}
           placeholder="Nhập email"
+          placeholderTextColor={'gray'}
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
           style={[styles.input]}
           placeholder="Nhập họ tên"
+          placeholderTextColor={'gray'}
           onChangeText={(text) => setFullName(text)}
         />
         <TextInput
           style={[styles.input]}
           placeholder="Nhập mật khẩu"
+          placeholderTextColor={'gray'}
           secureTextEntry
           onChangeText={(text) => setPassword(text)}
         />
         <TextInput
           style={[styles.input]}
           placeholder="Xác nhận mật khẩu"
+          placeholderTextColor={'gray'}
           secureTextEntry
           onChangeText={(text) => setConfimPassword(text)}
         />
@@ -160,6 +164,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 15,
     marginBottom: 15,
+    color: 'black',
     borderColor: '#FF714B',
   },
   button: {
